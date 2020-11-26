@@ -1,7 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import 'cactus.dart';
 import 'cloud.dart';
 import 'dino.dart';
@@ -10,10 +9,10 @@ import 'ground.dart';
 
 void main() {
   runApp(MyApp());
+  SystemChrome.setEnabledSystemUIOverlays([]);
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage>
   double runVelocity = 30;
   double acceleration = 1;
   int highScore = 0;
+  int dayNightOffest = 1000;
 
   AnimationController worldController;
   Duration lastUpdateCall = Duration();
@@ -113,8 +113,8 @@ class _MyHomePageState extends State<MyHomePage>
 
     Rect dinoRect = dino.getRect(screenSize, runDistance);
     for (Cactus cactus in cacti) {
-      Rect obstacleRect = cactus.getRect(screenSize, runDistance).deflate(10);
-      if (dinoRect.overlaps(obstacleRect)) {
+      Rect obstacleRect = cactus.getRect(screenSize, runDistance);
+      if (dinoRect.overlaps(obstacleRect.deflate(20))) {
         _die();
       }
 
@@ -179,41 +179,61 @@ class _MyHomePageState extends State<MyHomePage>
     }
 
     return Scaffold(
-      body: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          if (dino.state != DinoState.dead) {
-            dino.jump();
-          }
-          if (dino.state == DinoState.dead) {
-            _newGame();
-          }
-        },
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            ...children,
-            AnimatedBuilder(
-              animation: worldController,
-              builder: (context, _) {
-                return Positioned(
-                  left: screenSize.width / 2 - 30,
-                  top: 100,
-                  child: Text('Score: ' + runDistance.toInt().toString()),
-                );
-              },
-            ),
-            AnimatedBuilder(
-              animation: worldController,
-              builder: (context, _) {
-                return Positioned(
-                  left: screenSize.width / 2 - 50,
-                  top: 120,
-                  child: Text('High Score: ' + highScore.toString()),
-                );
-              },
-            ),
-          ],
+      body: AnimatedContainer(
+        duration: Duration(milliseconds: 5000),
+        color: (runDistance ~/ dayNightOffest) % 2 == 0
+            ? Colors.white
+            : Colors.black,
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            if (dino.state != DinoState.dead) {
+              dino.jump();
+            }
+            if (dino.state == DinoState.dead) {
+              _newGame();
+            }
+          },
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ...children,
+              AnimatedBuilder(
+                animation: worldController,
+                builder: (context, _) {
+                  return Positioned(
+                    left: screenSize.width / 2 - 30,
+                    top: 100,
+                    child: Text(
+                      'Score: ' + runDistance.toInt().toString(),
+                      style: TextStyle(
+                        color: (runDistance ~/ dayNightOffest) % 2 == 0
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              AnimatedBuilder(
+                animation: worldController,
+                builder: (context, _) {
+                  return Positioned(
+                    left: screenSize.width / 2 - 50,
+                    top: 120,
+                    child: Text(
+                      'High Score: ' + highScore.toString(),
+                      style: TextStyle(
+                        color: (runDistance ~/ dayNightOffest) % 2 == 0
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
