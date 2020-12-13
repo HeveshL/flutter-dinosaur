@@ -440,6 +440,16 @@ class _MyHomePageState extends State<MyHomePage>
                   },
                 ),
               ),
+              Positioned(
+                bottom: 10,
+                child: FlatButton(
+                  onPressed: () {
+                    _die();
+                  },
+                  child: Text("Force Kill Dino"),
+                  textColor: Colors.red,
+                ),
+              ),
             ],
           ),
         ),
