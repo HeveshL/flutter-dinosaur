@@ -1,4 +1,4 @@
-int gravity = 2000;
+int gravity = 2500;
 const int WORLD_TO_PIXEL_RATIO = 10;
 double initialVelocity = 30;
 double acceleration = 1;
