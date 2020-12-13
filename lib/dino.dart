@@ -82,14 +82,14 @@ class Dino extends GameObject {
       velY = 0;
       state = DinoState.running;
     } else {
-      velY -= GRAVITY_PPSS * elapsedTimeSeconds;
+      velY -= gravity * elapsedTimeSeconds;
     }
   }
 
   void jump() {
     if (state != DinoState.jumping) {
       state = DinoState.jumping;
-      velY = 850;
+      velY = jumpVelocity;
     }
   }
 

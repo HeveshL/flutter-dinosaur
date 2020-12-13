@@ -6,6 +6,7 @@ import 'cloud.dart';
 import 'dino.dart';
 import 'game-object.dart';
 import 'ground.dart';
+import 'constants.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,6 +16,9 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
     return MaterialApp(
       title: 'Flutter Dino',
       debugShowCheckedModeBanner: false,
@@ -33,10 +37,8 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   Dino dino = Dino();
   double runDistance = 0;
-  double runVelocity = 30;
-  double acceleration = 1;
   int highScore = 0;
-  int dayNightOffest = 1000;
+  
 
   AnimationController worldController;
   Duration lastUpdateCall = Duration();
