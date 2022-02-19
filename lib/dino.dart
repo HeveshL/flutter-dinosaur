@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'constants.dart';
-import 'game-object.dart';
+import 'game_object.dart';
 import 'sprite.dart';
 
 List<Sprite> dino = [
@@ -61,15 +59,15 @@ class Dino extends GameObject {
   }
 
   @override
-  void update(Duration lastTime, Duration currentTime) {
+  void update(Duration lastUpdate, Duration? elapsedTime) {
     double elapsedTimeSeconds;
     try {
-      currentSprite = dino[(currentTime.inMilliseconds / 100).floor() % 2 + 2];
+      currentSprite = dino[(elapsedTime!.inMilliseconds / 100).floor() % 2 + 2];
     } catch (_) {
       currentSprite = dino[0];
     }
     try{
-      elapsedTimeSeconds = (currentTime - lastTime).inMilliseconds / 1000;
+      elapsedTimeSeconds = (elapsedTime! - lastUpdate).inMilliseconds / 1000;
     }
     catch(_){
       elapsedTimeSeconds = 0;

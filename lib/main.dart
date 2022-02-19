@@ -4,22 +4,24 @@ import 'package:flutter/services.dart';
 import 'cactus.dart';
 import 'cloud.dart';
 import 'dino.dart';
-import 'game-object.dart';
+import 'game_object.dart';
 import 'ground.dart';
 import 'constants.dart';
 
 void main() {
-  runApp(MyApp());
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Dino',
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -50,27 +52,27 @@ class _MyHomePageState extends State<MyHomePage>
   TextEditingController dayNightOffestController =
       TextEditingController(text: dayNightOffest.toString());
 
-  AnimationController worldController;
-  Duration lastUpdateCall = Duration();
+  late AnimationController worldController;
+  Duration lastUpdateCall = const Duration();
 
-  List<Cactus> cacti = [Cactus(worldLocation: Offset(200, 0))];
+  List<Cactus> cacti = [Cactus(worldLocation: const Offset(200, 0))];
 
   List<Ground> ground = [
-    Ground(worldLocation: Offset(0, 0)),
+    Ground(worldLocation: const Offset(0, 0)),
     Ground(worldLocation: Offset(groundSprite.imageWidth / 10, 0))
   ];
 
   List<Cloud> clouds = [
-    Cloud(worldLocation: Offset(100, 20)),
-    Cloud(worldLocation: Offset(200, 10)),
-    Cloud(worldLocation: Offset(350, -10)),
+    Cloud(worldLocation: const Offset(100, 20)),
+    Cloud(worldLocation: const Offset(200, 10)),
+    Cloud(worldLocation: const Offset(350, -10)),
   ];
 
   @override
   void initState() {
     super.initState();
     worldController =
-        AnimationController(vsync: this, duration: Duration(days: 99));
+        AnimationController(vsync: this, duration: const Duration(days: 99));
     worldController.addListener(_update);
     // worldController.forward();
     _die();
@@ -85,23 +87,23 @@ class _MyHomePageState extends State<MyHomePage>
 
   void _newGame() {
     setState(() {
-      cacti = [Cactus(worldLocation: Offset(200, 0))];
+      worldController.reset();
+      cacti = [Cactus(worldLocation: const Offset(200, 0))];
 
       ground = [
-        Ground(worldLocation: Offset(0, 0)),
+        Ground(worldLocation: const Offset(0, 0)),
         Ground(worldLocation: Offset(groundSprite.imageWidth / 10, 0))
       ];
 
       clouds = [
-        Cloud(worldLocation: Offset(100, 20)),
-        Cloud(worldLocation: Offset(200, 10)),
-        Cloud(worldLocation: Offset(350, -10)),
+        Cloud(worldLocation: const Offset(100, 20)),
+        Cloud(worldLocation: const Offset(200, 10)),
+        Cloud(worldLocation: const Offset(350, -10)),
       ];
       highScore = max(highScore, runDistance.toInt());
       runDistance = 0;
       runVelocity = initialVelocity;
       dino.state = DinoState.running;
-      worldController.reset();
       worldController.forward();
     });
   }
@@ -111,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage>
     dino.update(lastUpdateCall, worldController.lastElapsedDuration);
     try {
       elapsedTimeSeconds =
-          (worldController.lastElapsedDuration - lastUpdateCall)
+          (worldController.lastElapsedDuration! - lastUpdateCall)
                   .inMilliseconds /
               1000;
     } catch (_) {
@@ -119,6 +121,7 @@ class _MyHomePageState extends State<MyHomePage>
     }
 
     runDistance += runVelocity * elapsedTimeSeconds;
+    if (runDistance < 0) runDistance = 0;
     runVelocity += acceleration * elapsedTimeSeconds;
 
     Size screenSize = MediaQuery.of(context).size;
@@ -164,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage>
       }
     }
 
-    lastUpdateCall = worldController.lastElapsedDuration;
+    lastUpdateCall = worldController.lastElapsedDuration!;
   }
 
   @override
@@ -202,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     return Scaffold(
       body: AnimatedContainer(
-        duration: Duration(milliseconds: 5000),
+        duration: const Duration(milliseconds: 5000),
         color: (runDistance ~/ dayNightOffest) % 2 == 0
             ? Colors.white
             : Colors.black,
@@ -258,14 +261,14 @@ class _MyHomePageState extends State<MyHomePage>
                 right: 20,
                 top: 20,
                 child: IconButton(
-                  icon: Icon(Icons.settings),
+                  icon: const Icon(Icons.settings),
                   onPressed: () {
                     _die();
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("Change Physics"),
+                          title: const Text("Change Physics"),
                           actions: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -277,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Gravity:"),
+                                    const Text("Gravity:"),
                                     SizedBox(
                                       child: TextField(
                                         controller: gravityController,
@@ -307,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Acceleration:"),
+                                    const Text("Acceleration:"),
                                     SizedBox(
                                       child: TextField(
                                         controller: accelerationController,
@@ -337,7 +340,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Initial Velocity:"),
+                                    const Text("Initial Velocity:"),
                                     SizedBox(
                                       child: TextField(
                                         controller: runVelocityController,
@@ -367,7 +370,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Jump Velocity:"),
+                                    const Text("Jump Velocity:"),
                                     SizedBox(
                                       child: TextField(
                                         controller: jumpVelocityController,
@@ -397,7 +400,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Day-Night Offset:"),
+                                    const Text("Day-Night Offset:"),
                                     SizedBox(
                                       child: TextField(
                                         controller: dayNightOffestController,
@@ -417,7 +420,7 @@ class _MyHomePageState extends State<MyHomePage>
                                 ),
                               ),
                             ),
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 gravity = int.parse(gravityController.text);
                                 acceleration =
@@ -430,8 +433,10 @@ class _MyHomePageState extends State<MyHomePage>
                                     int.parse(dayNightOffestController.text);
                                 Navigator.of(context).pop();
                               },
-                              child: Text("Done"),
-                              textColor: Colors.grey,
+                              child: const Text(
+                                "Done",
+                                style: TextStyle(color: Colors.grey),
+                              ),
                             )
                           ],
                         );
@@ -442,12 +447,14 @@ class _MyHomePageState extends State<MyHomePage>
               ),
               Positioned(
                 bottom: 10,
-                child: FlatButton(
+                child: TextButton(
                   onPressed: () {
                     _die();
                   },
-                  child: Text("Force Kill Dino"),
-                  textColor: Colors.red,
+                  child: const Text(
+                    "Force Kill Dino",
+                    style: TextStyle(color: Colors.red),
+                  ),
                 ),
               ),
             ],

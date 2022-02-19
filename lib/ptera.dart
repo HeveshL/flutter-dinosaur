@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import './constants.dart';
 import 'package:flutter/widgets.dart';
 
-import 'game-object.dart';
+import 'game_object.dart';
 import 'sprite.dart';
 
 List<Sprite> pteraFrames = [
@@ -22,12 +20,12 @@ class Ptera extends GameObject {
   final Offset worldLocation;
   int frame = 0;
 
-  Ptera({this.worldLocation});
+  Ptera({required this.worldLocation});
 
   @override
   Rect getRect(Size screenSize, double runDistance) {
     return Rect.fromLTWH(
-        (worldLocation.dx - runDistance) * WORLD_TO_PIXEL_RATIO,
+        (worldLocation.dx - runDistance) * worlToPixelRatio,
         4 / 7 * screenSize.height -
             pteraFrames[frame].imageHeight -
             worldLocation.dy,

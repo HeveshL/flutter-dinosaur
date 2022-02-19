@@ -1,9 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/widgets.dart';
 
 import 'constants.dart';
-import 'game-object.dart';
+import 'game_object.dart';
 import 'sprite.dart';
 
 Sprite groundSprite = Sprite()
@@ -14,12 +12,12 @@ Sprite groundSprite = Sprite()
 class Ground extends GameObject {
   final Offset worldLocation;
 
-  Ground({this.worldLocation});
+  Ground({required this.worldLocation});
 
   @override
   Rect getRect(Size screenSize, double runDistance) {
     return Rect.fromLTWH(
-      (worldLocation.dx - runDistance) * WORLD_TO_PIXEL_RATIO,
+      (worldLocation.dx - runDistance) * worlToPixelRatio,
       screenSize.height / 1.75 - groundSprite.imageHeight,
       groundSprite.imageWidth.toDouble(),
       groundSprite.imageHeight.toDouble(),

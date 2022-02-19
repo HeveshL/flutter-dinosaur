@@ -1,5 +1,5 @@
 class Sprite {
-  String imagePath;
-  int imageWidth;
-  int imageHeight;
+  late String imagePath;
+  late int imageWidth;
+  late int imageHeight;
 }
