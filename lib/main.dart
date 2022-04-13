@@ -109,65 +109,69 @@ class _MyHomePageState extends State<MyHomePage>
   }
 
   _update() {
-    double elapsedTimeSeconds;
-    dino.update(lastUpdateCall, worldController.lastElapsedDuration);
     try {
-      elapsedTimeSeconds =
-          (worldController.lastElapsedDuration! - lastUpdateCall)
-                  .inMilliseconds /
-              1000;
-    } catch (_) {
-      elapsedTimeSeconds = 0;
-    }
-
-    runDistance += runVelocity * elapsedTimeSeconds;
-    if (runDistance < 0) runDistance = 0;
-    runVelocity += acceleration * elapsedTimeSeconds;
-
-    Size screenSize = MediaQuery.of(context).size;
-
-    Rect dinoRect = dino.getRect(screenSize, runDistance);
-    for (Cactus cactus in cacti) {
-      Rect obstacleRect = cactus.getRect(screenSize, runDistance);
-      if (dinoRect.overlaps(obstacleRect.deflate(20))) {
-        _die();
+      double elapsedTimeSeconds;
+      dino.update(lastUpdateCall, worldController.lastElapsedDuration);
+      try {
+        elapsedTimeSeconds =
+            (worldController.lastElapsedDuration! - lastUpdateCall)
+                    .inMilliseconds /
+                1000;
+      } catch (_) {
+        elapsedTimeSeconds = 0;
       }
 
-      if (obstacleRect.right < 0) {
-        setState(() {
-          cacti.remove(cactus);
-          cacti.add(Cactus(
-              worldLocation:
-                  Offset(runDistance + Random().nextInt(100) + 50, 0)));
-        });
-      }
-    }
+      runDistance += runVelocity * elapsedTimeSeconds;
+      if (runDistance < 0) runDistance = 0;
+      runVelocity += acceleration * elapsedTimeSeconds;
 
-    for (Ground groundlet in ground) {
-      if (groundlet.getRect(screenSize, runDistance).right < 0) {
-        setState(() {
-          ground.remove(groundlet);
-          ground.add(Ground(
-              worldLocation: Offset(
-                  ground.last.worldLocation.dx + groundSprite.imageWidth / 10,
-                  0)));
-        });
-      }
-    }
+      Size screenSize = MediaQuery.of(context).size;
 
-    for (Cloud cloud in clouds) {
-      if (cloud.getRect(screenSize, runDistance).right < 0) {
-        setState(() {
-          clouds.remove(cloud);
-          clouds.add(Cloud(
-              worldLocation: Offset(
-                  clouds.last.worldLocation.dx + Random().nextInt(100) + 50,
-                  Random().nextInt(40) - 20.0)));
-        });
-      }
-    }
+      Rect dinoRect = dino.getRect(screenSize, runDistance);
+      for (Cactus cactus in cacti) {
+        Rect obstacleRect = cactus.getRect(screenSize, runDistance);
+        if (dinoRect.overlaps(obstacleRect.deflate(20))) {
+          _die();
+        }
 
-    lastUpdateCall = worldController.lastElapsedDuration!;
+        if (obstacleRect.right < 0) {
+          setState(() {
+            cacti.remove(cactus);
+            cacti.add(Cactus(
+                worldLocation:
+                    Offset(runDistance + Random().nextInt(100) + 50, 0)));
+          });
+        }
+      }
+
+      for (Ground groundlet in ground) {
+        if (groundlet.getRect(screenSize, runDistance).right < 0) {
+          setState(() {
+            ground.remove(groundlet);
+            ground.add(Ground(
+                worldLocation: Offset(
+                    ground.last.worldLocation.dx + groundSprite.imageWidth / 10,
+                    0)));
+          });
+        }
+      }
+
+      for (Cloud cloud in clouds) {
+        if (cloud.getRect(screenSize, runDistance).right < 0) {
+          setState(() {
+            clouds.remove(cloud);
+            clouds.add(Cloud(
+                worldLocation: Offset(
+                    clouds.last.worldLocation.dx + Random().nextInt(100) + 50,
+                    Random().nextInt(40) - 20.0)));
+          });
+        }
+      }
+
+      lastUpdateCall = worldController.lastElapsedDuration!;
+    } catch (e) {
+      //
+    }
   }
 
   @override
