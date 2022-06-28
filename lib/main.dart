@@ -88,7 +88,11 @@ class _MyHomePageState extends State<MyHomePage>
   void _newGame() {
     setState(() {
       worldController.reset();
-      cacti = [Cactus(worldLocation: const Offset(200, 0))];
+      cacti = [
+        Cactus(worldLocation: const Offset(200, 0)),
+        Cactus(worldLocation: const Offset(300, 0)),
+        Cactus(worldLocation: const Offset(450, 0)),
+      ];
 
       ground = [
         Ground(worldLocation: const Offset(0, 0)),
@@ -98,7 +102,9 @@ class _MyHomePageState extends State<MyHomePage>
       clouds = [
         Cloud(worldLocation: const Offset(100, 20)),
         Cloud(worldLocation: const Offset(200, 10)),
-        Cloud(worldLocation: const Offset(350, -10)),
+        Cloud(worldLocation: const Offset(350, -15)),
+        Cloud(worldLocation: const Offset(500, 10)),
+        Cloud(worldLocation: const Offset(550, -10)),
       ];
       highScore = max(highScore, runDistance.toInt());
       runDistance = 0;
@@ -138,8 +144,11 @@ class _MyHomePageState extends State<MyHomePage>
           setState(() {
             cacti.remove(cactus);
             cacti.add(Cactus(
-                worldLocation:
-                    Offset(runDistance + Random().nextInt(100) + 50, 0)));
+                worldLocation: Offset(
+                    runDistance +
+                        Random().nextInt(100) +
+                        MediaQuery.of(context).size.width / worlToPixelRatio,
+                    0)));
           });
         }
       }
@@ -148,10 +157,14 @@ class _MyHomePageState extends State<MyHomePage>
         if (groundlet.getRect(screenSize, runDistance).right < 0) {
           setState(() {
             ground.remove(groundlet);
-            ground.add(Ground(
+            ground.add(
+              Ground(
                 worldLocation: Offset(
-                    ground.last.worldLocation.dx + groundSprite.imageWidth / 10,
-                    0)));
+                  ground.last.worldLocation.dx + groundSprite.imageWidth / 10,
+                  0,
+                ),
+              ),
+            );
           });
         }
       }
@@ -160,10 +173,16 @@ class _MyHomePageState extends State<MyHomePage>
         if (cloud.getRect(screenSize, runDistance).right < 0) {
           setState(() {
             clouds.remove(cloud);
-            clouds.add(Cloud(
+            clouds.add(
+              Cloud(
                 worldLocation: Offset(
-                    clouds.last.worldLocation.dx + Random().nextInt(100) + 50,
-                    Random().nextInt(40) - 20.0)));
+                  clouds.last.worldLocation.dx +
+                      Random().nextInt(200) +
+                      MediaQuery.of(context).size.width / worlToPixelRatio,
+                  Random().nextInt(50) - 25.0,
+                ),
+              ),
+            );
           });
         }
       }
