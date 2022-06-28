@@ -87,6 +87,11 @@ class _MyHomePageState extends State<MyHomePage>
 
   void _newGame() {
     setState(() {
+      highScore = max(highScore, runDistance.toInt());
+      runDistance = 0;
+      runVelocity = initialVelocity;
+      dino.state = DinoState.running;
+      dino.dispY = 0;
       worldController.reset();
       cacti = [
         Cactus(worldLocation: const Offset(200, 0)),
@@ -106,10 +111,7 @@ class _MyHomePageState extends State<MyHomePage>
         Cloud(worldLocation: const Offset(500, 10)),
         Cloud(worldLocation: const Offset(550, -10)),
       ];
-      highScore = max(highScore, runDistance.toInt());
-      runDistance = 0;
-      runVelocity = initialVelocity;
-      dino.state = DinoState.running;
+
       worldController.forward();
     });
   }
